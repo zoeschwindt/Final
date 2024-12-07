@@ -7,6 +7,7 @@ TagManager:
   - Piso
   - Barra
   - Enemigo
+  - Moneda
   layers:
   - Default
   - TransparentFX
