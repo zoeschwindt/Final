@@ -10,20 +10,12 @@ public class Spawnerr : MonoBehaviour
 
     private bool mirandoDerecha = true;
 
-    private void Girar()
-    {
-        float velocidadInput = Input.GetAxisRaw("Horizontal");
 
-        if (velocidadInput > 0 && !mirandoDerecha)
-        {
-            mirandoDerecha = !mirandoDerecha;
-            transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y, transform.localScale.z);
-        }
-        else if (velocidadInput < 0 && mirandoDerecha)
-        {
-            mirandoDerecha = !mirandoDerecha;
-            transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-        }
+    private void Girar() 
+    {
+
+        mirandoDerecha = !mirandoDerecha;
+
     }
 
     void Update()
@@ -33,8 +25,18 @@ public class Spawnerr : MonoBehaviour
         {
             Disparar();
         }
-        Girar();
-        
+
+        float velocidadInput = Input.GetAxisRaw("Horizontal");
+
+        if (velocidadInput > 0 && !mirandoDerecha)
+        {
+            Girar();
+        }
+        else if (velocidadInput < 0 && mirandoDerecha)
+        {
+            Girar();
+        }
+
     }
 
     private void Disparar()
@@ -46,10 +48,23 @@ public class Spawnerr : MonoBehaviour
         Rigidbody2D rigidbodyBala = balaInstancia.GetComponent<Rigidbody2D>();
         if (rigidbodyBala != null)
         {
-            rigidbodyBala.velocity = puntoDisparo.right * fuerzaDisparo; // En 2D, se usa 'right' para la dirección horizontal
+
+
+            if (mirandoDerecha)
+            {
+                rigidbodyBala.velocity = puntoDisparo.right * fuerzaDisparo; // En 2D, se usa 'right' para la dirección horizontal
+            }
+            else 
+            {
+                rigidbodyBala.velocity = - puntoDisparo.right * fuerzaDisparo; // En 2D, se usa 'right' para la dirección horizontal
+            }
         }
+
 
         // Destruir la bala después de un tiempo
         Destroy(balaInstancia, 1f);
+
+        
     }
 } 
+

@@ -1,47 +1,75 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+
+
 
 
 public class BarraDeVida : MonoBehaviour
 {
-    public int vidaActual;
-    public int vidaMaxima;
+    [Header("Health Settings")]
+    public int maxHealth = 5; // Máxima vida del jugador
+    private int currentHealth;
 
-    private void Start()
+    [Header("UI Settings")]
+    public GameObject rumBottlePrefab; // Prefab de las botellas
+    public Transform healthUIParent;   // Contenedor en el Canvas para las botellas
+
+    private List<GameObject> rumBottles = new List<GameObject>(); // Lista de las botellas instanciadas
+
+    void Start()
     {
-        vidaActual = vidaMaxima;
+        currentHealth = maxHealth; // Inicializa la vida al máximo
+        InitializeHealthUI();      // Crea las botellas de vida en la UI
     }
 
-    public void TomarDaño(int cantidadDaño)
+    void InitializeHealthUI()
     {
-        int vidaTemporal = vidaActual - cantidadDaño;
-
-        if (vidaTemporal < 0)
+        // Instancia las botellas y las posiciona en el contenedor
+        for (int i = 0; i < maxHealth; i++)
         {
-            vidaActual = 0;
-        }
-        else
-        {
-            vidaActual = vidaTemporal;
-        }
-        if (vidaActual <= 0)
-        {
-            Destroy(gameObject);
+            GameObject bottle = Instantiate(rumBottlePrefab, healthUIParent);
+            bottle.transform.localScale = Vector3.one; // Asegura la escala correcta
+            rumBottles.Add(bottle);
         }
     }
 
-    public void CurarVida(int cantidadCuracion)
+    // Método para recibir daño
+    public void TakeDamage(int damage)
     {
-        int vidaTemporal = vidaActual + cantidadCuracion;
-        if (vidaTemporal > vidaMaxima)
+        if (currentHealth > 0)
         {
-            vidaActual = vidaMaxima;
+            currentHealth -= damage; // Resta la vida en función del daño recibido
+            UpdateHealthUI();         // Actualiza la UI de vida
         }
-        else
+
+        if (currentHealth <= 0)
         {
-            vidaActual = vidaTemporal;
+            Die(); // Llama a la función de muerte si la vida llega a cero
+        }
+    }
+
+    void UpdateHealthUI()
+    {
+        // Actualiza las botellas visibles según la vida actual
+        for (int i = 0; i < rumBottles.Count; i++)
+        {
+            rumBottles[i].SetActive(i < currentHealth);
+        }
+    }
+
+    void Die()
+    {
+        Debug.Log("El jugador ha muerto.");
+        // Aquí puedes añadir más lógica, como reiniciar el nivel o mostrar una pantalla de "Game Over"
+    }
+
+    // Detecta si el jugador colisiona con un enemigo
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemigo"))
+        {
+            TakeDamage(1); // Llama a la función para reducir la vida del jugador
         }
     }
 }
