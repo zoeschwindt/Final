@@ -64,12 +64,5 @@ public class BarraDeVida : MonoBehaviour
         // Aquí puedes añadir más lógica, como reiniciar el nivel o mostrar una pantalla de "Game Over"
     }
 
-    // Detecta si el jugador colisiona con un enemigo
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Enemigo"))
-        {
-            TakeDamage(1); // Llama a la función para reducir la vida del jugador
-        }
-    }
+    
 }

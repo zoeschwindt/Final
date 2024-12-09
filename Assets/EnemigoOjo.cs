@@ -3,19 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
 
-public class EnemigoOjo : MonoBehaviour
+public class EnemigoOjo : MonoBehaviour, IEnemigo
 {
     public Transform player;                // Referencia al jugador
     public float detectionRange = 5f;        // Rango de detección
     public float attackRange = 1f;           // Rango de ataque
     public float moveSpeed = 2f;             // Velocidad de movimiento
 
-    private int currentHealth = 3;           // Salud del enemigo
+    public int currentHealth = 3;           // Salud del enemigo
     private bool isDead = false;             // Verifica si el enemigo está muerto
-    [SerializeField] private Animator animator; // Referencia al Animator
-
+    private Animator animator; // Referencia al Animator
+    private SpriteRenderer spriteRenderer;
     // Prefab que aparecerá después de la muerte
     [SerializeField] private GameObject deathPrefab;
+
+    public int damage = 1;
+    private void Awake()
+    {
+        animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+    }
 
     void Update()
     {
@@ -39,13 +47,15 @@ public class EnemigoOjo : MonoBehaviour
     {
         Vector3 direction = (player.position - transform.position).normalized;
         transform.position += direction * moveSpeed * Time.deltaTime;
+
+        spriteRenderer.flipX = player.position.x > transform.position.x ? false : true;
     }
 
     // Lógica de ataque (puedes implementar lo que quieras aquí)
     private void AttackPlayer()
     {
         animator.SetTrigger("Ataque"); // Reproduce la animación de ataque
-        Debug.Log("¡El enemigo ataca al jugador!");
+        //Debug.Log("¡El enemigo ataca al jugador!");
     }
 
     // Método para que el enemigo reciba daño de las balas
@@ -68,7 +78,7 @@ public class EnemigoOjo : MonoBehaviour
     {
         isDead = true; // Marca al enemigo como muerto
         animator.SetTrigger("Muerte"); // Activa la animación de muerte
-        Debug.Log("¡El enemigo ha muerto!");
+        //Debug.Log("¡El enemigo ha muerto!");
 
         // Después de 3 segundos de la animación de muerte, aparece el objeto
         StartCoroutine(SpawnDeathPrefab());
@@ -87,13 +97,24 @@ public class EnemigoOjo : MonoBehaviour
         Destroy(gameObject, 2f); // Destruye el enemigo tras 2 segundos para que se vea la animación
     }
 
-    // Método para detectar colisión con la bala
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(gameObject.transform.position, detectionRange);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(gameObject.transform.position, attackRange);
+
+
+
+    }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Bala"))
+        if (collision.gameObject.CompareTag("Player"))
         {
-            TakeDamage(1); // Llama a la función para reducir la vida del enemigo
-            Destroy(collision.gameObject); // Destruye la bala al colisionar
+            GameObject player = collision.gameObject;
+            player.GetComponent<BarraDeVida>().TakeDamage(damage);
+            TakeDamage(1); // Llama a la función para reducir la vida del jugador
         }
     }
 }

@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemigo : MonoBehaviour
+public class Enemigo : MonoBehaviour, IEnemigo
 {
     private enum EnemyState
     {
         Idle,
         Chase,
-        Attack
+        Attack,
+        Death
     }
 
     private Rigidbody2D rig;
@@ -22,13 +23,19 @@ public class Enemigo : MonoBehaviour
     public GameObject deathPrefab; // Prefab que aparece cuando muere
 
     private EnemyState currentState = EnemyState.Idle;
-    private float attackCooldown = 1.5f;
+    public float attackCooldown = 1.5f;
     private float lastAttackTime;
-    [SerializeField] private Animator animator;
+    private Animator animator;
+    private SpriteRenderer spriteRenderer;
+
 
     private void Awake()
     {
         rig = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+
     }
 
     private void Update()
@@ -38,12 +45,19 @@ public class Enemigo : MonoBehaviour
             case EnemyState.Idle:
                 UpdateIdle();
                 break;
+
             case EnemyState.Chase:
                 UpdateChase();
                 break;
+
             case EnemyState.Attack:
                 UpdateAttack();
                 break;
+
+            case EnemyState.Death:
+                StartCoroutine(SpawnDeathPrefab());
+                break;
+
         }
     }
 
@@ -66,9 +80,20 @@ public class Enemigo : MonoBehaviour
         Vector2 direction = (player.position - transform.position).normalized;
         rig.velocity = new Vector2(direction.x * moveSpeed, rig.velocity.y);
 
+        if (player.position.x > transform.position.x)
+        {
+            spriteRenderer.flipX = !spriteRenderer.flipX;
+
+        }
+
         if (IsPlayerInRange(attackRange))
         {
             ChangeState(EnemyState.Attack);
+        }
+
+        if (!IsPlayerInRange(detectionRange))
+        {
+            ChangeState(EnemyState.Idle);
         }
     }
 
@@ -76,11 +101,11 @@ public class Enemigo : MonoBehaviour
     {
         if (player == null) return;
 
-        rig.velocity = Vector2.zero;
-        animator.SetTrigger("Ataque");
 
         if (Time.time >= lastAttackTime + attackCooldown)
         {
+            animator.SetTrigger("Ataque");
+
             // Aplicar daño al jugador si está en rango
             var playerHealth = player.GetComponent<BarraDeVida>();
             if (playerHealth != null)
@@ -91,7 +116,11 @@ public class Enemigo : MonoBehaviour
             lastAttackTime = Time.time;
         }
 
-        if (!IsPlayerInRange(attackRange))
+        if (IsPlayerInRange(attackRange))
+        {
+            ChangeState(EnemyState.Attack);
+        }
+        else
         {
             ChangeState(EnemyState.Chase);
         }
@@ -114,33 +143,41 @@ public class Enemigo : MonoBehaviour
 
         if (vida <= 0)
         {
-            Die();
+            ChangeState(EnemyState.Death);
         }
     }
 
-    // Animación y destrucción cuando el enemigo muere
-    private void Die()
+    private IEnumerator SpawnDeathPrefab()
     {
+        GetComponent<Collider2D>().enabled = false;
         animator.SetTrigger("Muerte");
 
+        // Espera a que la animación termine, por ejemplo 3 segundos
+        yield return new WaitForSeconds(0.6f); // Ajusta este tiempo según lo necesites
+
+        // Instancia el prefab en la posición del enemigo
         if (deathPrefab != null)
         {
             Instantiate(deathPrefab, transform.position, Quaternion.identity);
         }
 
-        Destroy(gameObject, 0.5f); // Destruye al enemigo después de la animación
+        // Destruye el enemigo después de la animación de muerte
+        Destroy(gameObject);
     }
 
-    // Detecta balas
-    private void OnCollisionEnter2D(Collision2D collision)
+
+
+    private void OnDrawGizmosSelected()
     {
-        if (collision.gameObject.CompareTag("Bala"))
-        {
-            TakeDamage(1); // El enemigo recibe 1 de daño
-            Destroy(collision.gameObject); // Destruye la bala
-        }
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(gameObject.transform.position, detectionRange);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(gameObject.transform.position, attackRange);
     }
 }
+
+
 
 
 
