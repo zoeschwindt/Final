@@ -8,6 +8,8 @@ TagManager:
   - Barra
   - Enemigo
   - Moneda
+  - Bala
+  - Victory
   layers:
   - Default
   - TransparentFX

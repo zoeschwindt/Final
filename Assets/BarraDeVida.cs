@@ -15,6 +15,8 @@ public class BarraDeVida : MonoBehaviour
     public GameObject rumBottlePrefab; // Prefab de las botellas
     public Transform healthUIParent;   // Contenedor en el Canvas para las botellas
 
+    public Pantalla pantalla;
+
     private List<GameObject> rumBottles = new List<GameObject>(); // Lista de las botellas instanciadas
 
     void Start()
@@ -61,8 +63,8 @@ public class BarraDeVida : MonoBehaviour
     void Die()
     {
         Debug.Log("El jugador ha muerto.");
-        // Aquí puedes añadir más lógica, como reiniciar el nivel o mostrar una pantalla de "Game Over"
+       pantalla.ShowDefeatScreen(); // Muestra la pantalla de derrota
     }
 
-    
+
 }

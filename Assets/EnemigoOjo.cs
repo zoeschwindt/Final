@@ -79,7 +79,8 @@ public class EnemigoOjo : MonoBehaviour, IEnemigo
         isDead = true; // Marca al enemigo como muerto
         animator.SetTrigger("Muerte"); // Activa la animación de muerte
         //Debug.Log("¡El enemigo ha muerto!");
-
+        Collider2D collider2D = gameObject.GetComponent<Collider2D>();
+        collider2D.enabled = false;
         // Después de 3 segundos de la animación de muerte, aparece el objeto
         StartCoroutine(SpawnDeathPrefab());
     }
@@ -114,7 +115,7 @@ public class EnemigoOjo : MonoBehaviour, IEnemigo
         {
             GameObject player = collision.gameObject;
             player.GetComponent<BarraDeVida>().TakeDamage(damage);
-            TakeDamage(1); // Llama a la función para reducir la vida del jugador
+
         }
     }
 }
