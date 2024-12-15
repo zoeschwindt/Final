@@ -11,7 +11,7 @@ public class Victory : MonoBehaviour
     {
 
 
-        // Verificar si el objeto tiene el tag Victory
+        
         if (collision.CompareTag("Player"))
         {
           pantalla.ShowVictoryScreen();

@@ -5,16 +5,16 @@ using UnityEngine.XR;
 
 public class EnemigoOjo : MonoBehaviour, IEnemigo
 {
-    public Transform player;                // Referencia al jugador
-    public float detectionRange = 5f;        // Rango de detección
-    public float attackRange = 1f;           // Rango de ataque
-    public float moveSpeed = 2f;             // Velocidad de movimiento
+    public Transform player;                
+    public float detectionRange = 5f;        
+    public float attackRange = 1f;           
+    public float moveSpeed = 2f;             
 
-    public int currentHealth = 3;           // Salud del enemigo
-    private bool isDead = false;             // Verifica si el enemigo está muerto
-    private Animator animator; // Referencia al Animator
+    public int currentHealth = 3;           
+    private bool isDead = false;             
+    private Animator animator; 
     private SpriteRenderer spriteRenderer;
-    // Prefab que aparecerá después de la muerte
+    
     [SerializeField] private GameObject deathPrefab;
     public Contador contador;
 
@@ -28,22 +28,19 @@ public class EnemigoOjo : MonoBehaviour, IEnemigo
 
     void Update()
     {
-        if (isDead) return; // Si el enemigo está muerto, no hace nada
+        if (isDead) return; 
 
-        // Si el jugador está dentro del rango de ataque, el enemigo ataca
         if (Vector3.Distance(transform.position, player.position) <= attackRange && !isDead)
         {
             AttackPlayer();
         }
 
-        // Si el jugador entra en el rango de detección, persigue al jugador
         if (Vector3.Distance(transform.position, player.position) <= detectionRange && !isDead)
         {
             ChasePlayer();
         }
     }
 
-    // Persigue al jugador
     private void ChasePlayer()
     {
         Vector3 direction = (player.position - transform.position).normalized;
@@ -52,51 +49,50 @@ public class EnemigoOjo : MonoBehaviour, IEnemigo
         spriteRenderer.flipX = player.position.x > transform.position.x ? false : true;
     }
 
-    // Lógica de ataque (puedes implementar lo que quieras aquí)
+    
     private void AttackPlayer()
     {
-        animator.SetTrigger("Ataque"); // Reproduce la animación de ataque
-        //Debug.Log("¡El enemigo ataca al jugador!");
+        animator.SetTrigger("Ataque"); 
+        
     }
 
-    // Método para que el enemigo reciba daño de las balas
+    
     public void TakeDamage(int damage)
     {
         if (currentHealth > 0)
         {
-            currentHealth -= damage; // Reduce la vida del enemigo
+            currentHealth -= damage; 
             Debug.Log($"Vida del enemigo: {currentHealth}");
 
             if (currentHealth <= 0)
             {
-                Die(); // Llama al método de muerte si la vida llega a cero
+                Die(); 
             }
         }
     }
 
-    // Lógica de muerte
+    
     private void Die()
     {
-        isDead = true; // Marca al enemigo como muerto
-        animator.SetTrigger("Muerte"); // Activa la animación de muerte
-        //Debug.Log("¡El enemigo ha muerto!");
+        isDead = true; 
+        animator.SetTrigger("Muerte"); 
+        
         Collider2D collider2D = gameObject.GetComponent<Collider2D>();
         collider2D.enabled = false;
-        // Después de 3 segundos de la animación de muerte, aparece el objeto
+        
         StartCoroutine(SpawnDeathPrefab());
     }
 
-    // Método que se ejecuta después de la animación de muerte
+    
     private IEnumerator SpawnDeathPrefab()
     {
-        // Espera a que la animación termine, por ejemplo 3 segundos
-        yield return new WaitForSeconds(3f); // Ajusta este tiempo según lo necesites
+        
+        yield return new WaitForSeconds(3f); 
 
-        // Instancia el prefab en la posición del enemigo
         Instantiate(deathPrefab, transform.position, Quaternion.identity);
 
-        // Destruye el enemigo después de la animación de muerte
-        Destroy(gameObject, 2f); // Destruye el enemigo tras 2 segundos para que se vea la animación
+      
+        Destroy(gameObject, 2f); 
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -110,7 +106,7 @@ public class EnemigoOjo : MonoBehaviour, IEnemigo
     }
     private void OnDestroy()
     {
-        // Llamar al método EnemyDestroyed del contador cuando el enemigo sea destruido
+        
         if (contador != null)
         {
             contador.EnemyDestroyed(gameObject);

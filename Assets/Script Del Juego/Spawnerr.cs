@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Spawnerr : MonoBehaviour
 {
-    [SerializeField] private GameObject balaPrefab; // Prefab del proyectil
-    [SerializeField] private Transform puntoDisparo; // Lugar desde donde se dispara
-    [SerializeField] private float fuerzaDisparo = 10f; // Velocidad del proyectil
+    [SerializeField] private GameObject balaPrefab; 
+    [SerializeField] private Transform puntoDisparo; 
+    [SerializeField] private float fuerzaDisparo = 10f; 
 
     private bool mirandoDerecha = true;
 
@@ -20,8 +20,8 @@ public class Spawnerr : MonoBehaviour
 
     void Update()
     {
-        // Verificar si el jugador no está muerto (puedes adaptarlo a tu lógica)
-        if (Input.GetMouseButtonDown(0)) // Botón izquierdo del mouse
+        
+        if (Input.GetMouseButtonDown(0)) 
         {
             Disparar();
         }
@@ -41,10 +41,10 @@ public class Spawnerr : MonoBehaviour
 
     private void Disparar()
     {
-        // Instanciar la bala en el punto de disparo
+        
         GameObject balaInstancia = Instantiate(balaPrefab, puntoDisparo.position, puntoDisparo.rotation);
 
-        // Obtener el Rigidbody2D de la bala y aplicar la fuerza
+       
         Rigidbody2D rigidbodyBala = balaInstancia.GetComponent<Rigidbody2D>();
         if (rigidbodyBala != null)
         {
@@ -52,16 +52,16 @@ public class Spawnerr : MonoBehaviour
 
             if (mirandoDerecha)
             {
-                rigidbodyBala.velocity = puntoDisparo.right * fuerzaDisparo; // En 2D, se usa 'right' para la dirección horizontal
+                rigidbodyBala.velocity = puntoDisparo.right * fuerzaDisparo; 
             }
             else 
             {
-                rigidbodyBala.velocity = - puntoDisparo.right * fuerzaDisparo; // En 2D, se usa 'right' para la dirección horizontal
+                rigidbodyBala.velocity = - puntoDisparo.right * fuerzaDisparo; 
             }
         }
 
 
-        // Destruir la bala después de un tiempo
+       
         Destroy(balaInstancia, 1f);
 
         

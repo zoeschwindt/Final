@@ -6,7 +6,7 @@ using TMPro;
 public class Tiempoo : MonoBehaviour
 {
     public TMP_Text timerText;
-    private float timeRemaining = 25f; // 2 minutos en segundos
+    private float timeRemaining = 25f; 
     public Pantalla pantalla;
 
     void Update()
@@ -16,21 +16,21 @@ public class Tiempoo : MonoBehaviour
             timeRemaining -= Time.deltaTime;
             int minutes = (int)(timeRemaining / 60);
             int seconds = (int)(timeRemaining % 60);
-            timerText.text = minutes + ":" + seconds.ToString("00"); // Muestra MM:SS
+            timerText.text = minutes + ":" + seconds.ToString("00"); 
         }
         else
         {
-            timerText.text = "0:00"; // Tiempo terminado
+            timerText.text = "0:00"; 
             Debug.Log("¡Se acabó el tiempo!");
-            pantalla.ShowDefeatScreen(); // Muestra la pantalla de derrota
+            pantalla.ShowDefeatScreen(); 
         }
     }
 
-    // Método para añadir tiempo al temporizador
+  
     public void AddTime(float extraTime)
     {
-        timeRemaining += extraTime; // Suma los segundos al tiempo restante
-        if (timeRemaining < 0) // Evita tiempos negativos
+        timeRemaining += extraTime; 
+        if (timeRemaining < 0) 
         {
             timeRemaining = 0;
         }
