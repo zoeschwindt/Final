@@ -12111,7 +12111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maximaVida: 5
-  botellaPrefab: {fileID: 0}
+  botellaPrefab: {fileID: 7409817391703760357, guid: dc9f8f6cf68d207459fce5dd128d3a61, type: 3}
   healthUIParent: {fileID: 1387389913}
   pantalla: {fileID: 332896165}
 --- !u!114 &626951024
