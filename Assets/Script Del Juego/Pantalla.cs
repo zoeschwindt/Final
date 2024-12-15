@@ -23,10 +23,7 @@ public class Pantalla : MonoBehaviour
         {
             gameover.SetActive(false);
         }
-        else
-        {
-            Debug.LogWarning("La pantalla de victoria no está asignada en el inspector.");
-        }
+        
     }
     
 
@@ -41,10 +38,7 @@ public class Pantalla : MonoBehaviour
             textgameover.text = "YOU WIN!";
             Time.timeScale = 0; // Detener el tiempo del juego (opcional)
         }
-        else
-        {
-            Debug.LogError("La pantalla de victoria no está asignada.");
-        }
+        
     }
 
     public void ShowDefeatScreen()
@@ -57,10 +51,7 @@ public class Pantalla : MonoBehaviour
             textgameover.text = "GAME OVER";
             Time.timeScale = 0; // Detener el tiempo del juego (opcional)
         }
-        else
-        {
-            Debug.LogError("La pantalla de derrota no está asignada.");
-        }
+        
     }
 
 }

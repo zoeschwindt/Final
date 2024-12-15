@@ -103,19 +103,26 @@ public class MovimientoPersonaje : MonoBehaviour
             }
         }
 
-        private void Girar()
-        {
-            mirandoDerecha = !mirandoDerecha;
+    private void Girar()
+    {
+        mirandoDerecha = !mirandoDerecha;
+        float playerEscala;
 
-            transform.localScale = new Vector3(
-                mirandoDerecha ? Mathf.Abs(transform.localScale.x) : -Mathf.Abs(transform.localScale.x),
-                transform.localScale.y,
-                transform.localScale.z);
+        if (mirandoDerecha)
+        {
+            playerEscala = Mathf.Abs(transform.localScale.x);
+        }
+        else
+        {
+            playerEscala = -Mathf.Abs(transform.localScale.x);
         }
 
-
-
-
+        transform.localScale = new Vector3(playerEscala, transform.localScale.y, transform.localScale.z);
     }
+
+
+
+
+}
 
 

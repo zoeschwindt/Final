@@ -27,6 +27,7 @@ public class Enemigo : MonoBehaviour, IEnemigo
     private float lastAttackTime;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
+    public Contador contador;
 
 
     private void Awake()
@@ -158,22 +159,20 @@ public class Enemigo : MonoBehaviour, IEnemigo
         // Instancia el prefab en la posición del enemigo
         if (deathPrefab != null)
         {
-            Instantiate(deathPrefab, transform.position, Quaternion.identity);
+            Instantiate(deathPrefab, transform.position + new Vector3 (0,1.8f,0), Quaternion.identity);
         }
 
         // Destruye el enemigo después de la animación de muerte
         Destroy(gameObject);
     }
 
-
-
-    private void OnDrawGizmosSelected()
+    private void OnDestroy()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(gameObject.transform.position, detectionRange);
-
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(gameObject.transform.position, attackRange);
+        // Llamar al método EnemyDestroyed del contador cuando el enemigo sea destruido
+        if (contador != null)
+        {
+            contador.EnemyDestroyed(gameObject);
+        }
     }
 }
 

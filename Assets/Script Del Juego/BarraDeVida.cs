@@ -7,12 +7,12 @@ using UnityEngine;
 
 public class BarraDeVida : MonoBehaviour
 {
-    [Header("Health Settings")]
-    public int maxHealth = 5; // Máxima vida del jugador
-    private int currentHealth;
 
-    [Header("UI Settings")]
-    public GameObject rumBottlePrefab; // Prefab de las botellas
+    public int maximaVida = 5; // Máxima vida del jugador
+    private int vidaActual;
+
+  
+    public GameObject botellaPrefab; // Prefab de las botellas
     public Transform healthUIParent;   // Contenedor en el Canvas para las botellas
 
     public Pantalla pantalla;
@@ -21,16 +21,16 @@ public class BarraDeVida : MonoBehaviour
 
     void Start()
     {
-        currentHealth = maxHealth; // Inicializa la vida al máximo
-        InitializeHealthUI();      // Crea las botellas de vida en la UI
+        vidaActual = maximaVida; // Inicializa la vida al máximo
+        InicializarVidaUI();      // Crea las botellas de vida en la UI
     }
 
-    void InitializeHealthUI()
+    void InicializarVidaUI()
     {
         // Instancia las botellas y las posiciona en el contenedor
-        for (int i = 0; i < maxHealth; i++)
+        for (int i = 0; i < maximaVida; i++)
         {
-            GameObject bottle = Instantiate(rumBottlePrefab, healthUIParent);
+            GameObject bottle = Instantiate(botellaPrefab, healthUIParent);
             bottle.transform.localScale = Vector3.one; // Asegura la escala correcta
             rumBottles.Add(bottle);
         }
@@ -39,13 +39,13 @@ public class BarraDeVida : MonoBehaviour
     // Método para recibir daño
     public void TakeDamage(int damage)
     {
-        if (currentHealth > 0)
+        if (vidaActual > 0)
         {
-            currentHealth -= damage; // Resta la vida en función del daño recibido
+            vidaActual -= damage; // Resta la vida en función del daño recibido
             UpdateHealthUI();         // Actualiza la UI de vida
         }
 
-        if (currentHealth <= 0)
+        if (vidaActual <= 0)
         {
             Die(); // Llama a la función de muerte si la vida llega a cero
         }
@@ -56,7 +56,7 @@ public class BarraDeVida : MonoBehaviour
         // Actualiza las botellas visibles según la vida actual
         for (int i = 0; i < rumBottles.Count; i++)
         {
-            rumBottles[i].SetActive(i < currentHealth);
+            rumBottles[i].SetActive(i < vidaActual);
         }
     }
 
@@ -66,5 +66,13 @@ public class BarraDeVida : MonoBehaviour
        pantalla.ShowDefeatScreen(); // Muestra la pantalla de derrota
     }
 
+    public void AddLife(int amount)
+    {
+        if (vidaActual < maximaVida)
+        {
+            vidaActual += amount; // Suma vida
+            UpdateHealthUI();        // Actualiza la UI de vida
+        }
+    }
 
 }

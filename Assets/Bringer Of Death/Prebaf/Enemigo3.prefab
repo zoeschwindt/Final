@@ -159,11 +159,12 @@ MonoBehaviour:
   player: {fileID: 0}
   detectionRange: 5
   attackRange: 2.99
-  moveSpeed: 2
+  moveSpeed: 3
   vida: 5
   "da\xF1oAlJugador": 1
   deathPrefab: {fileID: 1347150761315340976, guid: f4b71ef45e8ddf5448941ffe2ea641b0, type: 3}
   attackCooldown: 1.5
+  contador: {fileID: 0}
 --- !u!50 &4558379293290853315
 Rigidbody2D:
   serializedVersion: 4

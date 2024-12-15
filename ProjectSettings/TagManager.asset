@@ -10,6 +10,10 @@ TagManager:
   - Moneda
   - Bala
   - Victory
+  - Vida
+  - Tiempoo
+  - Time
+  - Monedass
   layers:
   - Default
   - TransparentFX

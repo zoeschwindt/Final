@@ -16,6 +16,7 @@ public class EnemigoOjo : MonoBehaviour, IEnemigo
     private SpriteRenderer spriteRenderer;
     // Prefab que aparecerá después de la muerte
     [SerializeField] private GameObject deathPrefab;
+    public Contador contador;
 
     public int damage = 1;
     private void Awake()
@@ -98,17 +99,6 @@ public class EnemigoOjo : MonoBehaviour, IEnemigo
         Destroy(gameObject, 2f); // Destruye el enemigo tras 2 segundos para que se vea la animación
     }
 
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(gameObject.transform.position, detectionRange);
-
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(gameObject.transform.position, attackRange);
-
-
-
-    }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
@@ -117,5 +107,16 @@ public class EnemigoOjo : MonoBehaviour, IEnemigo
             player.GetComponent<BarraDeVida>().TakeDamage(damage);
 
         }
+    }
+    private void OnDestroy()
+    {
+        // Llamar al método EnemyDestroyed del contador cuando el enemigo sea destruido
+        if (contador != null)
+        {
+            contador.EnemyDestroyed(gameObject);
+        }
+
+
+
     }
 }
