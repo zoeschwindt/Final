@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class Pantalla : MonoBehaviour
 {
-    public GameObject gameover; // Pantalla de victoria
+    public GameObject gameover; 
     public TMP_Text textgameover;
     public AudioSource audioSource;
     public AudioClip audioVictory;
@@ -18,7 +18,7 @@ public class Pantalla : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         audioSource.clip = audioGameplay;
         audioSource.Play();
-        // Asegurarse de que ambas pantallas estén ocultas al inicio
+        
         if (gameover != null)
         {
             gameover.SetActive(false);
@@ -34,9 +34,9 @@ public class Pantalla : MonoBehaviour
         {
             audioSource.clip = audioVictory;
             audioSource.Play();
-            gameover.SetActive(true); // Mostrar la pantalla de victoria
+            gameover.SetActive(true); 
             textgameover.text = "YOU WIN!";
-            Time.timeScale = 0; // Detener el tiempo del juego (opcional)
+            Time.timeScale = 0; 
         }
         
     }
@@ -47,9 +47,9 @@ public class Pantalla : MonoBehaviour
         {
             audioSource.clip = audioGameover;
             audioSource.Play();
-            gameover.SetActive(true); // Mostrar la pantalla de derrota
+            gameover.SetActive(true); 
             textgameover.text = "GAME OVER";
-            Time.timeScale = 0; // Detener el tiempo del juego (opcional)
+            Time.timeScale = 0; 
         }
         
     }

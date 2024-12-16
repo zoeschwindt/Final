@@ -18,9 +18,9 @@ public class Enemigo : MonoBehaviour, IEnemigo
     public float attackRange = 1f;
     public float moveSpeed = 2f;
 
-    public int vida = 5; // Vida del enemigo
-    public int dañoAlJugador = 1; // Daño al jugador
-    public GameObject deathPrefab; // Prefab que aparece cuando muere
+    public int vida = 5; 
+    public int dañoAlJugador = 1; 
+    public GameObject deathPrefab; 
 
     private EnemyState currentState = EnemyState.Idle;
     public float attackCooldown = 1.5f;
@@ -107,11 +107,11 @@ public class Enemigo : MonoBehaviour, IEnemigo
         {
             animator.SetTrigger("Ataque");
 
-            // Aplicar daño al jugador si está en rango
+           
             var playerHealth = player.GetComponent<BarraDeVida>();
             if (playerHealth != null)
             {
-                playerHealth.TakeDamage(dañoAlJugador); // Llamar al método TakeDamage() del jugador
+                playerHealth.TakeDamage(dañoAlJugador); 
             }
 
             lastAttackTime = Time.time;
@@ -137,7 +137,7 @@ public class Enemigo : MonoBehaviour, IEnemigo
         return Vector3.Distance(transform.position, player.position) <= range;
     }
 
-    // Método que recibe daño
+    
     public void TakeDamage(int dañoRecibido)
     {
         vida -= dañoRecibido;
@@ -153,22 +153,22 @@ public class Enemigo : MonoBehaviour, IEnemigo
         GetComponent<Collider2D>().enabled = false;
         animator.SetTrigger("Muerte");
 
-        // Espera a que la animación termine, por ejemplo 3 segundos
-        yield return new WaitForSeconds(0.6f); // Ajusta este tiempo según lo necesites
+        
+        yield return new WaitForSeconds(0.6f); 
 
-        // Instancia el prefab en la posición del enemigo
+      
         if (deathPrefab != null)
         {
             Instantiate(deathPrefab, transform.position + new Vector3 (0,1.8f,0), Quaternion.identity);
         }
 
-        // Destruye el enemigo después de la animación de muerte
+        
         Destroy(gameObject);
     }
 
     private void OnDestroy()
     {
-        // Llamar al método EnemyDestroyed del contador cuando el enemigo sea destruido
+        
         if (contador != null)
         {
             contador.EnemyDestroyed(gameObject);
